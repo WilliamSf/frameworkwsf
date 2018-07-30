@@ -31,12 +31,15 @@ class Helpers
     */
     public function validaFrom($vet)
     {
-        if (!empty($vet) & is_array($vet)) {
+        if (!empty($vet) & is_array($vet))
+        {
             $seguro1 = array_map('strip_tags', $vet);
             $seguro2 = array_map('trim', $seguro1);
 
             return $seguro2;
-        } else {
+        } 
+        else 
+        {
             return false;
         }
     }
@@ -46,8 +49,10 @@ class Helpers
      */
     public function validaData($data)
     {
-        //Se a data for menor que 8
-        if (strlen($data) < 8)
+        $data = trim($data);
+
+        //Se a data for menor que 8 e não tiver vazio
+        if (!empty($data) & strlen($data) < 8)
         {
             return false;
         } 

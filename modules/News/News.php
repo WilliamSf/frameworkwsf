@@ -162,61 +162,80 @@ class News
 
     public function pesquisaNoticia($data)
     {
-        /* array
-        (
-            [id] => 4
-            [titulo] => Teste testando
-            [corpo] => testando o corpinho
-            [categoria] => 
-            [autor] => 4
-            [data_noticia] => 2018-02-16 16:41:00
-            [nome_autor] => Faraó do Egito Souza
-        ) */
-
         //Validando os dados
         $dataValidado = $this->valida->validaFrom($data);
         //Validando a data
-        //$dateValidado = $this->valida->validaData($data['data_noticia']);
+        $data_noticia_inicio = $this->valida->validaData($data['data_noticia_inicio']);
+        $data_noticia_fim = $this->valida->validaData($data['data_noticia_fim']);
 
-        /* SELECT noticias .* , autores.nome_autor
-        FROM noticias
-        INNER JOIN autores
-        ON noticias.autor = autores.id_autor */
-
-        //iniciando query
-        $query = "SELECT noticias.*, autores.nome_autor 
+        //Inicio da Query base
+        $queryData = "SELECT noticias.*, autores.nome_autor 
         FROM noticias
         INNER JOIN autores
         ON noticias.autor = autores.id_autor
-        WHERE ";
+        WHERE id != 0 ";
 
         //Limpando indices vazios
         $data = array_filter($dataValidado); //elimina todos valores vazios
 
-        //Aqui começa a brincadeira
+        //Verifico se foi preechido algum campo
         if (!empty($data) && is_array($data)) :
-            foreach ($data as $key => $value) 
-            {
-                if ($key == 'titulo')
-                {
-                    $place[] = $key . " LIKE :" . $key;
-                    $data[$key] = "%" . $value . "%";
-                } 
-                else
-                {
-                    $place[] = $key . " = :" . $key;
-                }
+
+            //Verifica se tem alguma data preechida
+            if (!empty($data_noticia_inicio) || !empty($data_noticia_fim))
+            {   
+                //Caso seja preechido somente a data inicial, faz com que seja a mesma data no fim para realizar a consulta
+                $data_noticia_inicio = empty(trim($data_noticia_inicio))? $data_noticia_fim : $data_noticia_inicio;
+                //Caso seja preechido somente a data fim, faz com que seja a mesma data no inicio para realizar a consulta
+                $data_noticia_fim = empty(trim($data_noticia_fim))? $data_noticia_inicio : $data_noticia_fim;
+                //Se tiver data preenchida, inicio a query com os paramentos para fazer a busca com a data
+                $queryInicio = " AND (CAST(noticias.data_noticia as DATE) BETWEEN :data_noticia_inicio AND :data_noticia_fim) ";
             }
 
-            $query .= implode(' AND ', $place);
+                unset($data['data_noticia_inicio']);
+                unset($data['data_noticia_fim']);
 
-            //echo $query;
-            //print_r($data);
+                //inica a variavel
+                $place = array();
 
-            $pesquisa = $this->db->prepare($query);
+                //Faz o laço para fazer a busca de acordo com que foi preenchido
+                foreach ($data as $key => $value)
+                {
+                    if ($key == 'titulo') 
+                    {
+                        $place[] = $key . " LIKE :" . $key;
+                        $data[$key] = "%" . $value . "%";
+                    } 
+                    
+                    else 
+                    {
+                        $place[] = $key . " = :" . $key;
+                    }
+                }
+
+            //Verifica se tem a query inicio preechida a cima
+            if (!empty($queryInicio))
+            {
+                
+                //se tiver o query inicio eles tem que ter
+                $data['data_noticia_inicio'] = $data_noticia_inicio;
+                $data['data_noticia_fim'] = $data_noticia_fim;
+                //Junto com a query base com a data
+                $queryData .= $queryInicio;
+            }
+            //Verifica se ta preechido o laço
+            if (!empty($place))
+            {
+                $queryData .= ' AND ' . implode(' AND ', $place);
+            }
+
+            /* echo $queryData;
+            print_r($data); */
+
+            $pesquisa = $this->db->prepare($queryData);
             $pesquisa->execute($data);
 
-            if ($pesquisa->rowCount() > 0) 
+            if ($pesquisa->rowCount() > 0)
             {
                 //print_r($pesquisa->fetchAll());
 
@@ -225,10 +244,7 @@ class News
                 $results = '';
 
                 //print_r($resultados);
-                foreach ($resultados as $key => $value) 
-                {
-                // $this->pesqNoticia .= "{$value['titulo']} - {$value['categoria']} - {$value['nome_autor']} </br>";
-
+                foreach ($resultados as $key => $value) {
                     $this->pesqNoticia .= "
                         <tr>
                             <td>{$value['titulo']}</td>
@@ -236,24 +252,25 @@ class News
                             <td>{$value['nome_autor']}</td>
                             <td>{$value['data_noticia']}</td>
                             <td>
-                                <a href='".BASE."noticias/acesso/{$value['id']}' class='btn-floating btn-small waves-effect waves-light btn-color '><i class='material-icons'>send</i></a>
+                                <a href='" . BASE . "noticias/acesso/{$value['id']}' class='btn-floating btn-small waves-effect waves-light btn-color '><i class='material-icons'>send</i></a>
                             </td>
                         </tr>
                         ";
                 }
                 return true;
-            }
+            } 
             else
             {
                 //caso procure sem preencher os dados
                 $this->msgErro = "Nenhuma notícia encontrada com os dados preechido !";
                 return false;
-            }
-        else:
+            } 
+        else :
             //nenhum campo preenchido
             $this->msgErro = "Favor preencher os campos para pesquisa !";
             return false;
         endif;
+               
     
     }
 

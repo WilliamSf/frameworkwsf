@@ -39,8 +39,8 @@
         </div>
         <div class="row">
             <div class="input-field col s12 l6">
-                <input id="data_noticia_incio" name="data_noticia_incio" type="text" class="datepicker-here">
-                <label for="data_noticia_incio">Data inicial</label>
+                <input id="data_noticia_inicio" name="data_noticia_inicio" type="text" class="datepicker-here">
+                <label for="data_noticia_inicio">Data inicial</label>
             </div>
             <div class="input-field col s12 l6">
                 <input id="data_noticia_fim" name="data_noticia_fim" type="text" class="datepicker-here">
