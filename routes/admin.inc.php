@@ -1,6 +1,6 @@
 <?php
 $this->get('admin/home', function ($arg) {
-    $verificaLogin = $this->core->loadModule('users');
+    $verificaLogin = $this->core->loadModule('helpers');
     if (!$verificaLogin->verifyLogin()) 
     {
         header("Location: ".BASE."login");

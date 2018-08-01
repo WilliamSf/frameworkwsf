@@ -15,3 +15,4 @@ $this->get('', function($arg){
  */
 $this->loadRouteFile('noticias');
 $this->loadRouteFile('login');
+$this->loadRouteFile('admin');

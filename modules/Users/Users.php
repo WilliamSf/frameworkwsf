@@ -8,13 +8,17 @@
 
 class Users
 {
-
+    public $msgErro;
+    public $msgSucess;
+    private $db;
+    private $valida;
     private $idUser;
 
     private function __construct()
     {
         $core = Core::getInstance();
         $db = $this->db = $core->loadModule('database');
+        $this->valida = $core->loadModule('helpers');
 
     }
 
@@ -28,31 +32,95 @@ class Users
         return $inst;
     }
 
-    public function verifyLogin()
+    
+    //Método para logar
+    public function userLogar($data)
     {
-        if (!empty ($_SESSION['hashlogin'])) 
+        //Validando os dados vindo pelo post
+        $dataValidado = $this->valida->validaFrom($data);
+
+        if (!empty($dataValidado))
         {
-            $s = $_SESSION['hashlogin'];
+            $username = strtolower($dataValidado['username']);
+            $pass = $dataValidado['pass'];
 
-            $sql = $db->prepare("SELECT * FROM users WHERE loginhash = :hash");
-            $sql->bindValue(":hash", $s);
-            $sql->execute();
-
-            if ($sql->rowCount() > 0)
+            if ($users = $this->valida->validaUser($username, $pass))
             {
-                $data = $sql->fetch();
-                $this->idUser = $data['id'];
-                
+                //Deu certo
                 return true;
+            }
+            else
+            {
+                //Usuario ou a senha ta errada
+                $this->msgErro = "Usuário ou senha errada, digite novamente !";
+            }
+        }
+        else
+        {
+            //Não foi preenchido nada
+            $this->msgErro = "Favor preencha seus dados !";
+        }
+    }
+
+    //Método de cadastro
+    public function cadastroUser($data)
+    {
+        $dataValidado = $this->valida->validaFrom($data);
+
+        if (!empty($dataValidado))
+        {
+            $username = strtolower($dataValidado['username']);
+            $pass =  password_hash($dataValidado['pass'], PASSWORD_DEFAULT);
+
+            //Validando se é um user correto
+            if ($users = $this->valida->validaUserName($username))
+            {   
+                //Validando se é uma senha forte
+                if($forcaPass = $this->valida->validaUserSenha($dataValidado['pass']))
+                {
+                    //Validando se já existe, se não existir faz o cadastro 
+                    if (!$usersExist = $this->valida->userExistente($username))
+                    {
+                        $sql = $this->db->prepare("INSERT INTO users (username, pass) VALUES (:username, :pass)");
+
+                        try
+                        {
+                            $sql->bindValue(":username", $username);
+                            $sql->bindValue(":pass", $pass);
+                            $sql->execute();
+
+                            $this->msgSucess = "Usuário cadastrado com sucesso!";
+                            return true;
+
+                        } 
+                        catch (PDOException $e)
+                        {
+                            die($e->getMessage());
+                            return false;
+                        }
+                    } 
+                    else
+                    {
+                        $this->msgErro = "Usuário já cadastrado, tente outro !";
+                    }                    
+                }
+                else
+                {
+                    //Senha não valida
+                    $this->msgErro = "Senha não válida !";
+                }
             }
             else 
             {
-                return false;
+                //Usuario não válido
+                $this->msgErro = "Usuário não válido (Digite apenas letras e números).";
             }
+            
         }
-        else 
+        else
         {
-            return false;
+            //Não veio nenhum dados
+            $this->msgErro = "Preencha todos os campos.";
         }
     }
 

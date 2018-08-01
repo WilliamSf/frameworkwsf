@@ -95,4 +95,134 @@ class Helpers
         }
     }
 
+    public function verifyLogin()
+    {
+        if (!empty($_SESSION['hashlogin']))
+        {
+            $s = $_SESSION['hashlogin'];
+
+            $sql = $this->db->prepare("SELECT * FROM users WHERE loginhash = :hash");
+            $sql->bindValue(":hash", $s);
+            $sql->execute();
+
+            if ($sql->rowCount() > 0) {
+                $data = $sql->fetch();
+                $this->idUser = $data['id'];
+
+                return true;
+            }
+            else
+            {
+                return false;
+            }
+        }
+        else
+        {
+            return false;
+        }
+    }
+
+    /** ValidaUserName
+     * Recebe um valor e verfica se tem letras de a-z e se tem numero de 0-9
+     */
+    public function validaUserName($name)
+    {
+        if (!empty(preg_match('/^[a-z0-9]+$/', $name)))
+        {
+            return true;
+        }
+        else
+        {
+            return false;
+        }
+    }
+
+    /** ValidaUserSenha
+     * Regex para verficar a força da senha
+     * @param string tem que conter letra maiúscula
+     * @param string tem que conter letra minúscula
+     * @param int tem que conter número
+     */
+    public function validaUserSenha($pass)
+    {
+        if (preg_match('/^.*(?=.{8,})(?=.*\d)(?=.*[a-z])(?=.*[A-Z]).*$/', $pass))
+        {
+            return true;
+        }
+        else
+        {
+            return false;
+        }
+    }
+
+    /** UserExistente
+     * Recebe o usuario digitado e faz um select para ver se tem o usuario
+     * @param String;
+     */
+    public function userExistente($user)
+    {
+        $sql = $this->db->prepare("SELECT * FROM users WHERE username = :user");
+        $sql->bindValue(":user", $user);
+        $sql->execute();
+
+        if ($sql->rowCount() > 0)
+        {
+            return true;
+        }
+        else
+        {
+            return false;
+        }
+    }
+
+    /** ValidaUser
+     * Responsavel pela verificação do login
+     * @param String $username = usuario;
+     * @param String $pass = senha;
+     */
+    public function validaUser($username, $pass)
+    {
+        $sql = $this->db->prepare("SELECT * FROM users WHERE username = :username");
+        $sql->bindValue(":username", $username);
+        $sql->execute();
+
+        if ($sql->rowCount() > 0)
+        {
+            //Guarda os dados encontrados do user
+            $dadosUser = $sql->fetch();
+            //Função nativa do php que verifica o hash criado, se passa a senha que user digitou e o hash salvo no banco
+            if (password_verify($pass, $dadosUser['pass']))
+            {
+                $loginhash = md5(rand(0,99999).time().$dadosUser['id'].$dadosUser['username']);
+
+                //Metodo responsavel por enviar o hash criado para o banco
+                $this->setLoginHash($dadosUser['id'], $loginhash);
+                //Salva o hash na session
+                $_SESSION['hashlogin'] = $loginhash;
+                return true;
+            }
+            else
+            {
+                return false;
+            }
+        }
+        else
+        {
+            return false;
+        }
+    }
+
+    /** SetLoginHash
+     * Responsavel por salvar o hash do usuario toda vez em que ele faça o login
+     * @param String $id = id do usuario;
+     * @param String $loginhash = hash gerado no método de @method validaUser
+     */
+    private function setLoginHash($id, $loginhash)
+    {
+        $sql = $this->db->prepare("UPDATE users SET loginhash = :loginhash WHERE id = :id");
+        $sql->bindValue(":loginhash", $loginhash);
+        $sql->bindValue(":id", $id);
+        $sql->execute();
+    }
+
 }
