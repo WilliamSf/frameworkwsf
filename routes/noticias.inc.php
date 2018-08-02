@@ -15,9 +15,29 @@ $this->get('noticias/add', function ($arg) {
     $array = array();
     $array['autores'] = $data->getAutores();
 
+    $dataSelect = $this->core->loadModule('select');
+    $array['estados'] = $dataSelect->getEstados();
+  
+
     //view, dados e o template
     $this->loadView('noticia-nova', $array, 'padrao');
 });
+
+$this->post('noticias/selectNoticia', function ($arg) {
+    $dataSelect = $this->core->loadModule('select');
+    
+    $uf = key($_POST);
+
+    if ($dataSelect->getMunicipios($uf))
+    {
+        $vet['options'] = $dataSelect->cidades;
+        $vet['resp'] = 1;
+    }
+     
+    echo json_encode($vet);
+});
+
+
 
 $this->post('noticias/addNoticia', function ($arg) {
     $newsAdd = $this->core->loadModule('news');

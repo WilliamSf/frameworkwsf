@@ -1,4 +1,5 @@
 <script src="<?php echo RAIZ ?>assets/js/ajax/noticia.ajax.js"></script>
+<script src="<?php echo RAIZ ?>assets/js/ajax/select.ajax.js"></script>
 
 <div class="container">
     <div class="row">
@@ -39,6 +40,23 @@
                     <?php endforeach ?>
                 </select>
                 <label>Autor</label>
+            </div>
+        </div>
+        <div class="row">
+            <div class="input-field col s12 m6">
+                <select name="estados" id="estados" onchange="selectCidade(this)">
+                    <option value="" disabled selected>selecione...</option>
+                    <?php foreach($data['estados'] as $estado): ?>
+                        <option value="<?php echo $estado['Uf'] ?>"><?php echo $estado['Nome'] ?></option>
+                    <?php endforeach; ?>
+                </select>
+                <label>Estado</label>
+            </div>
+            <div class="input-field col s12 m6">
+                <select name="cidade" id="cidade">
+                    <option value="" disabled selected>selecione o estado primeiro</option>
+                </select>
+                <label>Cidade</label>
             </div>
         </div>
         <div class="row">
