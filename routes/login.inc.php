@@ -9,7 +9,7 @@ $this->get('login', function ($arg) {
 
 $this->post('login/logarUser', function ($arg) {
     $logar = $this->core->loadModule('users');
-
+ 
     if ($logar->userLogar($_POST))
     {
         $vet['resp'] = 1;

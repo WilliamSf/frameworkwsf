@@ -1,8 +1,8 @@
 <?php
 $this->get('admin/home', function ($arg) {
-    helperLogin::verifyLogin();
+    //helperLogin::verifyLogin();
 
     $array = array();
 
-    $this->loadView('admin-home', $array, 'padrao');
+    $this->loadView('admin-home', $array, 'admin');
 });

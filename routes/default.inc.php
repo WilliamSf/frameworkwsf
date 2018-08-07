@@ -4,7 +4,7 @@ $this->get('', function($arg){
 
     $array = array();
 
-    $this->loadView('home', $array, 'padrao');
+    $this->loadView('home', $array, 'site');
 });
 
 
@@ -16,3 +16,4 @@ $this->get('', function($arg){
 $this->loadRouteFile('noticias');
 $this->loadRouteFile('login');
 $this->loadRouteFile('admin');
+$this->loadRouteFile('cliente');

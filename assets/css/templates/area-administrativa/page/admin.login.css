@@ -1,0 +1,140 @@
+.no-margin {
+    margin-bottom: 0 !important;
+}
+
+.btn-padrao {}
+
+.msg-bv-login {
+    position: relative;
+    text-align: center;
+}
+
+.msg-bv-login p {
+    margin: 0px 100px 0px 100px;
+}
+
+.msg-bv-login h1 {
+    font-weight: bold;
+}
+
+.logo-login {
+    height: 160px;
+    position: absolute;
+    top: 22%;
+    left: 57% !important;
+    transform: translate(-50%, -50%);
+}
+
+.logo-title-login {
+    position: absolute;
+    top: 35%;
+    left: 50% !important;
+    transform: translate(-50%, -50%);
+    font-weight: bold;
+}
+
+.background-login {
+    background-image: url('../../images/background.login.jpg');
+    height: 100vh;
+    background-size: cover;
+    background-repeat: no-repeat;
+    position: relative;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.background-cadastro {
+    background-image: url('../../images/background3.login.jpg');
+    height: 100vh;
+    background-size: cover;
+    background-repeat: no-repeat;
+    position: relative;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.shadow-overlay {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    opacity: .9;
+    background: -moz-linear-gradient(left, #0c4ba1 0%, #023e90 50%, transparent 100%);
+    background: -webkit-linear-gradient(left, #0c4ba1 0%, #023e90 50%, transparent 100%);
+    /* background: linear-gradient(to right, black 0%, black 20%, transparent 100%); */
+    background: linear-gradient(to right, #0c4ba1 0%, #023e90 50%, transparent 100%);
+    filter: progid:DXImageTransform.Microsoft.gradient(startColorstr='#000000', endColorstr='#00000000', GradientType=1);
+}
+
+.content-form-bv-login {
+    position: absolute;
+    top: 50%;
+    left: 50% !important;
+    transform: translate(-50%, -50%);
+    width: 80%;
+}
+
+.content-left-login {
+    position: relative;
+    height: 100vh;
+}
+
+.text {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    z-index: 10;
+}
+
+.svg-mask {
+    width: 100%;
+    /* margin: 5%; */
+    height: 100vh;
+    /* min-height: 500px; */
+}
+
+svg text {
+    text-anchor: middle;
+}
+
+.alpha {
+    fill: #bbb;
+}
+
+.title {
+    letter-spacing: 1px;
+    font-size: 7em;
+    font-weight: 800;
+    text-transform: uppercase;
+}
+
+.base {
+    fill: white;
+    mask: url(#mask);
+}
+
+.background {
+    background: url('../../images/background-4.jpg') no-repeat top center;
+    background-size: cover;
+    position: relative;
+    width: 100%;
+    height: 100vh;
+    min-height: 700px;
+}
+
+@media (max-width: 1366px) {
+    .logo-login {
+        top: 25%;
+    }
+    .logo-title-login {
+        top: 39%;
+        width: 58%;
+    }
+    .content-form-bv-login {
+        top: 70%;
+    }
+}
