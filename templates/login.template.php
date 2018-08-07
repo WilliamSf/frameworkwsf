@@ -17,7 +17,7 @@
     $this->core = Core::getInstance();
     $frame = $this->core->loadFrameworkCss('materialize');
     ?>
-    <link rel="stylesheet" href="<?php echo BASE ?>assets/css/login/login.css">
+    <link rel="stylesheet" href="<?php echo RAIZ ?>assets/css/login/login.css">
     <meta name="viewport" content="width=device-width, initial-scale=1">
 </head>
 <body>

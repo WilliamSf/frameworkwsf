@@ -11,6 +11,13 @@ spl_autoload_register(function($class){
     {
         require 'modules/'.$class.'/'.$class.'.php';
     }
+    elseif(strpos($class, 'helper') > -1) 
+    {
+        if(file_exists('helpers/'.$class.'.php'))
+        {
+            require_once 'helpers/'.$class.'.php';
+        }
+    }
 });
 
 Core::getInstance()->run($config);

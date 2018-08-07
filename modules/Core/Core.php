@@ -63,17 +63,5 @@ class Core
         }
     }
 
-    //teste
-    public function helper($help)
-    {
-        $h = '';
-        $helper = $help . 'Helper';
-        if (file_exists('helpers/'.$helper.'.class.php')) {
-            require_once 'helpers/'.$helper.'.class.php';
-            $h = new $helper;
-        }
-
-        return $h;
-    }
 
 }
