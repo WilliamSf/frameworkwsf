@@ -62,6 +62,9 @@ class Router
             break;
         }
 
+        //Inicia a pagina 404
+        $notfound = 0;
+
         //loop em todos os routes
         foreach ($type as $pt => $func) 
         {
@@ -94,11 +97,20 @@ class Router
                 //print_r($arg);
 
                 $func($arg);
+
+                //Se tiver tudo certo adiciono o valor de 1 na var da pagina de 404
+                $notfound = 1;
+
                 break;
             }
-
             
         }
+
+        if ($notfound == 0)
+        {
+            header('Location: '.RAIZ.'ERRO-404');
+        }
+
     }
 
     public function get($pattern, $function)

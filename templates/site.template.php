@@ -18,9 +18,6 @@
     $this->core = Core::getInstance();
     $frame = $this->core->loadFrameworkCss('materialize');
     ?>
-
-    <!-- Datepicker Air CSS -->
-    <link rel="stylesheet" type="text/css" href="<?php echo RAIZ . 'assets/'; ?>js/components/airdatepicker/datepicker.css">
 </head>
 <body>
     <?php
@@ -38,7 +35,5 @@
     $this->core = Core::getInstance();
     $frame = $this->core->loadFrameworkJs('materialize');
     ?>
-    <!-- JS Sweet alert -->
-    <script src="<?php echo RAIZ ?>assets/js/components/sweetAlert/sweetalert.min.js"></script>
 </body>
 </html>
